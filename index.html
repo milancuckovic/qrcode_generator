@@ -29,7 +29,7 @@
             </div>
             <div class="p-6 flex justify-center">
                 <div>
-                    <a id="link" class="px-4 bg-lime-500 hover:bg-lime-600 hover:cursor-pointer text-stone-200 border-2 border font-bold p-4 rounded-xl hidden" download><i class="fa fa-download"></i> Preuzmi QR Code</a>
+                    <button type="button" id="btn" class="px-4 bg-lime-500 hover:bg-lime-600 hover:cursor-pointer text-stone-200 border-2 border font-bold p-4 rounded-xl hidden"><i class="fa fa-download"></i> Preuzmi QR Code</button>
                 </div>
             </div>        
         </div>
@@ -76,13 +76,22 @@
             var qrdata= document.getElementById('qr-date');
             var qrcode = new QRCode(document.getElementById('qrcode'));
             function generateQR(){
-                $("#link").removeClass("hidden");
                 var data = qrdata.value;
-                qrcode.makeCode(data);
-                var qrsrc=$("#qrcode").children("img").attr("src");
-                $("#link").attr("href",qrsrc);
-                $("#link").attr("download",qrsrc);
+                qrcode.makeCode(data);            
+                $("#btn").removeClass("hidden");
             }
+            function download(file) {
+                var element = document.createElement('a');
+                element.setAttribute('href', file);
+                element.setAttribute('download', 'qrcode.png');
+                document.body.appendChild(element);
+                element.click();              
+                document.body.removeChild(element);
+            }
+            document.getElementById("btn")
+            .addEventListener("click", function() {
+                var file = $("#qrcode").children("img").attr("src");              
+                download(file);
+            }, false);    
         </script>
- 
 </html>
