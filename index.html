@@ -79,9 +79,6 @@
                 $("#link").removeClass("hidden");
                 var data = qrdata.value;
                 qrcode.makeCode(data);
-                downloadA();
-            }
-            function downloadA(){
                 var qrsrc=$("#qrcode").children("img").attr("src");
                 $("#link").attr("href",qrsrc);
                 $("#link").attr("download",qrsrc);
