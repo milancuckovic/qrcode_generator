@@ -20,16 +20,18 @@
     <body class="bg-lime-50">
         <div class="flex flex-col justify-center">
             <div class="p-6 m-4">
-                <h1 class="text-center mb-10 text-4xl font-bold">Generator QR Coda:</h1>
+                <h1 class="text-center mb-10 text-4xl font-bold">QR Code generator:</h1>
                 <input class="p-4 w-full text-gray-900 bg-gray-50 rounded-xl border-2 border-gray-300 sm:text-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" type="text" onchange="generateQR()" id="qr-date" placeholder="Unesite tekst koji želite generisati...">
-                <p class="p-2 tex-base"><b>NAPOMENA:</b> Možete koristiti za generisanje linka, samo se potrudite da link bude što kraći, kako bi QR kod bio čitljivi.</p>
+                <p class="p-2 tex-base"><b>NAPOMENA:</b> Možete koristiti za generisanje linka, samo se potrudite da link bude što kraći, kako bi QR kod bio čitljiv.</p>
             </div>
             <div class="p-6 flex justify-center">                
                 <div id="qrcode" class="m-4"></div>
+                <div id="qrcode_svg" class="m-4 hidden"></div>
             </div>
             <div class="p-6 flex justify-center">
                 <div>
                     <button type="button" id="btn" class="px-4 bg-lime-500 hover:bg-lime-600 hover:cursor-pointer text-stone-200 border-2 border font-bold p-4 rounded-xl hidden"><i class="fa fa-download"></i> Preuzmi QR Code</button>
+                    <button type="button" id="btn_svg" class="px-4 bg-lime-500 hover:bg-lime-600 hover:cursor-pointer text-stone-200 border-2 border font-bold p-4 rounded-xl hidden"><i class="fa fa-download"></i> Preuzmi SVG QR Code</button>
                 </div>
             </div>        
         </div>
@@ -74,11 +76,15 @@
             var datum=new Date();
             $("#godina").html(datum.getFullYear());
             var qrdata= document.getElementById('qr-date');
-            var qrcode = new QRCode(document.getElementById('qrcode'));
+            var qrcode = new QRCode(document.getElementById('qrcode'));      
+            var qrcode_svg = new QRCode(document.getElementById('qrcode_svg'));           
             function generateQR(){
                 var data = qrdata.value;
-                qrcode.makeCode(data);            
+                qrcode.makeCode(data);    
+                qrcode_svg.makeCode(data);   
+                console.log(qrcode.QRCode());     
                 $("#btn").removeClass("hidden");
+                $("#btn_svg").removeClass("hidden");
             }
             function download(file) {
                 var element = document.createElement('a');
@@ -88,10 +94,23 @@
                 element.click();              
                 document.body.removeChild(element);
             }
-            document.getElementById("btn")
-            .addEventListener("click", function() {
-                var file = $("#qrcode").children("img").attr("src");              
+            function downloadSvg(file) {
+                var element = document.createElement('a');
+                element.setAttribute('href', file);
+                element.setAttribute('download', 'qrcode.svg');
+                document.body.appendChild(element);
+                element.click();              
+                document.body.removeChild(element);
+            }
+            document.getElementById("btn").addEventListener("click", function() {
+                var canvas = $("#qrcode").children("canvas");
+                var file = canvas;  
                 download(file);
+            }, false);    
+            document.getElementById("btn_svg").addEventListener("click", function() {
+                var canvas = $("#qrcode_svg").children("canvas");
+                var file = canvas;  
+                downloadSvg(file);
             }, false);    
         </script>
 </html>
